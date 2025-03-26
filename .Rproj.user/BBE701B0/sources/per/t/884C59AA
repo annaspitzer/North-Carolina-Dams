@@ -1,0 +1,27 @@
+{
+    "id": "884C59AA",
+    "path": "~/Desktop/EJ LAB/Github Repo/RScripts/LoadData.R",
+    "project_path": "RScripts/LoadData.R",
+    "type": "r_source",
+    "hash": "3386831308",
+    "contents": "",
+    "dirty": false,
+    "created": 1743006292675.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "43,0",
+        "scrollLine": "10",
+        "useRainbowParens": "true"
+    },
+    "folds": "9|21|29|0|\n",
+    "lastKnownWriteTime": 1743007074,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1743007074583,
+    "read_only": false,
+    "read_only_alternatives": []
+}

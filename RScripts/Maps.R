@@ -1,5 +1,7 @@
 ### Plots ###
 
+source("RScripts/LoadData.R")
+
 ######################## SOVI BY COUNTY MAP W/ HIGH HAZARD DAMS ###########################
 
 highhazard_coordinates <- finaldata_county %>%
@@ -23,28 +25,6 @@ ggplot(data = NCsovi_county_sf) +
              color = "grey", size = 0.5) +
   scale_fill_viridis_c(option = "plasma", name = "SoVI Score Groups") +
   labs(title = "Social Vulnerability Index (SoVI) by County") +
-  labs(subtitle = "High Hazard Potential Dams Overlayed") +
-  theme_minimal() +
-  theme(axis.text = element_blank(), axis.ticks = element_blank())
-
-######################## SOVI BY CENSUS TRACT MAP W/ HIGH HAZARD DAMS ###########################
-
-NC_tracts <- tracts(state = 37) %>%
-  st_transform(crs = 4326) %>%
-  select(GEOID, geometry)
-
-NCsovi_censustract_sf <- left_join(NC_tracts, NCsovi_censustract, by = "GEOID") %>%
-  select(GEOID, E_TOTPOP, RPL_THEMES) %>%
-  mutate(RPL_THEMES = ifelse(RPL_THEMES < 0 | RPL_THEMES > 1, NA, RPL_THEMES)) %>%  # Set out-of-range values to NA
-  # filter(E_TOTPOP > 0) %>%  ## not important right now, but the SOVI population estimates don't always match the actual census 
-  st_as_sf()
-
-ggplot(data = NCsovi_censustract_sf) +
-  geom_sf(aes(fill = RPL_THEMES), color = "black", size = 0.2) + 
-  geom_point(data = highhazard_coordinates, aes(x = Longitude, y = Latitude),
-             color = "grey", size = 0.5) +
-  scale_fill_viridis_c(option = "plasma", name = "SoVI Score Groups") +
-  labs(title = "Social Vulnerability Index (SoVI) by Census Tract") +
   labs(subtitle = "High Hazard Potential Dams Overlayed") +
   theme_minimal() +
   theme(axis.text = element_blank(), axis.ticks = element_blank())
@@ -86,3 +66,57 @@ ggplot(NCsovi_county_sf) +
        color = "Condition Assessment",
        x = "Longitude",
        y = "Latitude")
+
+######################## HIGH HAZARD DAMS OVER BASINS ###########################
+
+# Read shapefiles from NCDEQ of the major river basins
+river_basins <- st_read("Original Datasets/Major_Basins") %>%
+  select(-c(PlanLink, GlobalID)) %>%
+  rename(Basin_Sq_Miles = Sq_Miles) %>%
+  rename(Basin_Acres = Acres) %>%
+  rename(Basin_Name = Name)
+
+# shapefile of the locations of high hazard dams
+highhazard_sf <- finaldata_county %>%
+  filter(Hazard_Potential_Classification == "High") %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326)
+
+#plot the dams over the basins
+ggplot() +
+  geom_sf(data = river_basins, fill = "grey", color = "black", size = 0.1) +
+  geom_sf(data = highhazard_sf, aes(color = "red"), shape = 16, size = .5) +
+  labs(title = "River Basins and High Hazard Dams in NC",
+       subtitle = "Locations of high hazard dams overlayed on river basins",
+       fill = "Basin Name",
+       color = "High Hazard Dams") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+######################## SOVI BY CENSUS TRACT MAP W/ HIGH HAZARD DAMS ###########################
+
+# takes way too long for the whole state, but keep in case you ever want to edit to zoom into a
+
+
+NC_tracts <- tracts(state = 37) %>%
+  st_transform(crs = 4326) %>%
+  select(GEOID, geometry)
+
+NCsovi_censustract_sf <- left_join(NC_tracts, NCsovi_censustract, by = "GEOID") %>%
+  select(GEOID, E_TOTPOP, RPL_THEMES) %>%
+  mutate(RPL_THEMES = ifelse(RPL_THEMES < 0 | RPL_THEMES > 1, NA, RPL_THEMES)) %>%  # Set out-of-range values to NA
+  # filter(E_TOTPOP > 0) %>%  ## not important right now, but the SOVI population estimates don't always match the actual census 
+  st_as_sf()
+
+ggplot(data = NCsovi_censustract_sf) +
+  geom_sf(aes(fill = RPL_THEMES), color = "black", size = 0.2) + 
+  geom_point(data = highhazard_coordinates, aes(x = Longitude, y = Latitude),
+             color = "grey", size = 0.5) +
+  scale_fill_viridis_c(option = "plasma", name = "SoVI Score Groups") +
+  labs(title = "Social Vulnerability Index (SoVI) by Census Tract") +
+  labs(subtitle = "High Hazard Potential Dams Overlayed") +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.ticks = element_blank())
+
+
+
+

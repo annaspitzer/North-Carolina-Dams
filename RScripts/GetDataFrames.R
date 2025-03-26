@@ -7,11 +7,8 @@
   # Gets NC address set from NC OneMap, https://www.nconemap.gov/datasets/909e8b7d03e04aecaf7a1afc03376074_0/explore
   # Shapefiles of NC major river basins, https://data-ncdenr.opendata.arcgis.com/datasets/major-river-basins
 
-library(dplyr)
-library(tidyverse)
-library(sf)
-library(tigris)
-library(clipr)
+### DON'T CHANGE/RUN THIS UNLESS YOU WANT TO CHANGE BASE DATAFRAMES ###
+### LoadData.R is sourced at beginning of other scripts to access ###
 
 ##### BLOCKGROUP DAM DATA #####
     #gets final NCdams_blockgroups, which has the latitude/longitude and shape information for the blockgroup the dams are within 

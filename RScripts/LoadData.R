@@ -31,8 +31,6 @@ coastal_counties <-c("Bertie", "Beaufort", "Brunswick", "Camden", "Carteret", "C
 #####
 
 
-
-
 # dams and basins
 NCdams <- read_csv("Final Datasets/AllNCDams.csv")
 NCdams_censustracts <- read_csv("Final Datasets/NCDams_Censustracts.csv") #dams with census tract info
@@ -41,8 +39,10 @@ NCdams_censusandbasin <- read_csv("Final Datasets/NCdams_censusandbasin.csv") #h
 
 #SOVI 
   # just for RPL Themes and Aggregate
-NCsovi_censustract <- read_csv("Final Datasets/NCsovi_censustract.csv")
-NCsovi_county <- read_csv("Final Datasets/NCsovi_county.csv")
+NCsovi_censustract <- read_csv("Final Datasets/NCsovi_censustract.csv") %>%
+  mutate(GEOID = as.character(GEOID))
+NCsovi_county <- read_csv("Final Datasets/NCsovi_county.csv") %>%
+  mutate(CountyID = as.character(CountyID))
 
 # FINAL (entire combination of every dam and its corresponding SOVI RPL themes)
 finaldata_censustract <- read_csv("Final Datasets/finaldata_censustract.csv")

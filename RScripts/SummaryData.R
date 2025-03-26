@@ -1,7 +1,5 @@
-library(dplyr)
-library(tidyverse)
-library(sf)
-library(tigris)
+
+source("RScripts/LoadData.R")
 
 ###  ###
 aggregated_dams_all <- finaldata_county %>%
@@ -53,7 +51,7 @@ aggregated_by_region <- finaldata_county %>%
 
 # Owner vs Dam Condition Stuff
 
-ownership_condition_summary <- finaldata %>%
+ownership_condition_summary <- finaldata_county %>%
   group_by(Primary_Owner_Type, Condition_Assessment) %>%
   summarise(dam_count = n(), .groups = "drop") %>%
   arrange(Primary_Owner_Type, desc(dam_count))

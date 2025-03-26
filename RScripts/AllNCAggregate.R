@@ -1,9 +1,9 @@
-library(dplyr)
-library(tidyverse)
-library(sf)
-library(tigris)
+source("RScripts/LoadData.R")
 
 ### STATS BY COUNTY) ###
+
+  # issue to deal with later -- missing the five counties that don't have dams
+  
 summary_county <- finaldata_county %>%
   group_by(CountyID, County) %>%
   summarise(
@@ -32,6 +32,23 @@ summary_county <- finaldata_county %>%
     RPL_total = mean(RPL_THEMES, na.rm = TRUE)  
     ) 
 
+
+#### STATS BY BASIN ####
+
+aggregated_by_basin <- finaldata_county %>%
+  group_by(Basin_Name) %>%
+  summarise(
+    `High Hazard Dams (HHD)` = sum(Hazard_Potential_Classification == "High", na.rm = TRUE),
+    # Population = sum(POPULATION, na.rm = TRUE),
+    `Mean Age of Dam` = mean(2024-Year_Completed, na.rm = TRUE),
+    # `HHD / Person` = `High Hazard Dams (HHD)` / Population,
+    `Mean Distance to City` = mean(Distance_to_Nearest_City_Miles, na.rm = TRUE),
+    `Mean Storage` = mean(`Normal_Storage_Acre-Ft`, na.rm = TRUE),
+    `Mean Drainage Area` =mean(Drainage_Area_Sq_Miles, na.rm=TRUE),
+    # `Storage / Person` = `Mean Storage` / Population,
+    .groups = "drop"
+  ) %>%
+  mutate_if(is.numeric, round, 2)
 
 ########## OLD ##############
 
