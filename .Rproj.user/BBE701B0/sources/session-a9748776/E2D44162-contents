@@ -14,7 +14,8 @@
     #gets final NCdams_blockgroups, which has the latitude/longitude and shape information for the blockgroup the dams are within 
 
 NCdams <- read_csv("Original Datasets/NCdams_NID.csv") %>% # Every dam in NC from NID
-  rename_all(~ gsub(" ", "_", .)) %>%   # Add _ instead of spaces
+  rename_all(~ gsub(" ", "_", .)) %>%
+  rename_all(~ gsub("-", "_", .)) %>%   # Add _ instead of spaces
   rename_all(~ gsub("[()]", "", .))     # Remove parentheses
 write_csv(NCdams, "Final Datasets/AllNCDams.csv")
 

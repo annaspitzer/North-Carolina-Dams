@@ -1,26 +1,33 @@
-
-source("RScripts/AllNCAggregate.R")
-
-## Linear Regressions ##
-
-
-
-###################### OLD #####################
-
 # Correlation for high hazard and EJ supplementary demographic index
 
-summary_county_reg <- summary_county %>%
+summary_county <- aggregated_dams_all %>%
   filter(high_hazard > 5)
 
-spearman_sovi <- cor.test(summary_county_reg$high_hazard, summary_county_reg$RPL_total, method = "spearman")
+spearman_ejdem <- cor.test(summary_county$high_hazard, summary_county$ej_dem_ind, method = "spearman")
+spearman_sovi <- cor.test(summary_county$high_hazard, summary_county$avg_sovi_score, method = "spearman")
 
 #plot for EJ Demographic Index
-ggplot(summary_county_reg, aes(x = high_hazard, y = RPL_total)) +
+ggplot(summary_county, aes(x = high_hazard, y = ej_dem_ind)) +
   geom_point() +  # Add scatter points
   geom_smooth(method = "lm", se = FALSE, color = "blue") +  # Add regression line
   labs(
     title = paste0(
       "Relationship Between EJ Demographic Indicator Index and High Hazard Dams\n",
+      "Spearman's rho = ", round(spearman_ejdem$estimate, 2), 
+      ", p-value = ", signif(spearman_ejdem$p.value, 3)
+    ),
+    x = "Total High Hazard Dams",
+    y = "Average Dem Index Score"
+  ) +
+  theme_minimal()
+
+#plot for SOVI index
+ggplot(summary_county, aes(x = high_hazard, y = avg_sovi_score)) +
+  geom_point() +  # Add scatter points
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +  # Add regression line
+  labs(
+    title = paste0(
+      "Relationship Between Social Vulnerability Index and High Hazard Dams\n",
       "Spearman's rho = ", round(spearman_sovi$estimate, 2), 
       ", p-value = ", signif(spearman_sovi$p.value, 3)
     ),
@@ -28,7 +35,6 @@ ggplot(summary_county_reg, aes(x = high_hazard, y = RPL_total)) +
     y = "Average Dem Index Score"
   ) +
   theme_minimal()
-
 
 
 ######################

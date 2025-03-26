@@ -3,7 +3,18 @@ source("RScripts/LoadData.R")
 ### STATS BY COUNTY) ###
 
   # issue to deal with later -- missing the five counties that don't have dams
-  
+
+regression_county <- finaldata_county %>%
+  group_by(CountyID, County) %>%
+  summarise(
+    SOVI = mean(RPL_THEMES, na.rm = TRUE),
+    high_hazard_count = sum(Hazard_Potential_Classification == "High", na.rm = TRUE),
+    avg_age = mean(2024 - Year_Completed),
+    avg_height = mean(NID_Height_Ft, na.rm = TRUE),
+    avg_storage = mean(Normal_Storage_Acre_Ft, na.rm = TRUE),
+    avg_distance = mean(Distance_to_Nearest_City_Miles, na.rm = TRUE)
+  )
+    
 summary_county <- finaldata_county %>%
   group_by(CountyID, County) %>%
   summarise(
