@@ -1,7 +1,33 @@
 
 source("RScripts/AllNCAggregate.R")
+source("RScripts/SummaryData.R")
 
-## Linear Regressions ##
+## Regressions ##
+
+# quick ggplot of counties vs dams
+ggplot(county_dam_distribution, aes(x = high_hazard_count, y = n)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(
+    title = "Distribution of Counties by High Hazard Dam Count",
+    x = "Number of High Hazard Dams",
+    y = "Number of Counties"
+  ) +
+  theme_minimal()
+
+# Change variables based on summary table
+lm_model <- lm(SOVI ~ high_hazard_count + avg_height + avg_storage + avg_distance, 
+               data = regression_county)
+summary(lm_model)
+
+#ggplot to change for certain variables if curious
+ggplot(regression_county, aes(x = high_hazard_count, y = SOVI)) +
+  geom_point() +  # Scatter plot
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +  # Regression line
+  labs(title = "SOVI vs. High Hazard Count",
+       x = "High Hazard Count",
+       y = "SOVI") +
+  theme_minimal()
+
 
 
 

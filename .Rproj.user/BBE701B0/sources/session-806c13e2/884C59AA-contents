@@ -6,6 +6,7 @@ library(dplyr)
 library(tidyverse)
 library(tigris)
 library(sf)
+library(ggplot2)
 
 ##### County Vectors #####
 
