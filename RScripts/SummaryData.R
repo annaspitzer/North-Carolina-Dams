@@ -1,6 +1,6 @@
 source("RScripts/LoadData.R")
 
-### STATS BY COUNTY) ###
+### STATS BY COUNTY ###
 
   # issue to deal with later -- missing the five counties that don't have dams
 
@@ -48,6 +48,21 @@ long_summary_county <- finaldata_county %>%
     RPL_total = mean(RPL_THEMES, na.rm = TRUE)  
     ) 
 
+#### STATS BY REGION ####
+
+summary_by_region <- finaldata_county %>%
+  filter(Region %in% c("Western", "Piedmont", "Coastal")) %>%
+  group_by(Region) %>%
+  summarise(
+    `High Hazard Dams (HHD)` = sum(Hazard_Potential_Classification == "High", na.rm = TRUE),
+    Population = sum(E_TOTPOP[!duplicated(CountyID)], na.rm = TRUE),  # Summing unique County population
+    `Mean Age of Dam` = mean(2024-Year_Completed, na.rm = TRUE),
+    `HHD / Person` = `High Hazard Dams (HHD)` / Population,
+    `Mean Distance to City` = mean(Distance_to_Nearest_City_Miles, na.rm = TRUE),
+    `Mean Storage` = mean(Volume_Cubic_Yards, na.rm = TRUE),
+    `Storage / Person` = `Mean Storage` / Population,
+    .groups = "drop"
+  )
 
 #### STATS BY BASIN ####
 
